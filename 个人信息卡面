@@ -217,6 +217,7 @@
     function saveInfo() {
       const name = nameInput.value.trim();
       const bio = bioInput.value.trim();
+      const avatarSrc = avatar.src;
 
       if (name) {
         displayName.textContent = name;
@@ -225,6 +226,14 @@
       if (bio) {
         displayBio.textContent = bio;
       }
+
+      // 保存数据到localStorage
+      const userData = {
+        name: name,
+        bio: bio,
+        avatar: avatarSrc
+      };
+      localStorage.setItem('userInfo', JSON.stringify(userData));
 
       alert('信息保存成功！');
     }
@@ -240,6 +249,31 @@
         displayBio.textContent = bioInput.value;
       }
     });
+
+    // 页面加载时从localStorage恢复数据
+    function loadSavedInfo() {
+      const savedData = localStorage.getItem('userInfo');
+      if (savedData) {
+        const userData = JSON.parse(savedData);
+
+        if (userData.name) {
+          nameInput.value = userData.name;
+          displayName.textContent = userData.name;
+        }
+
+        if (userData.bio) {
+          bioInput.value = userData.bio;
+          displayBio.textContent = userData.bio;
+        }
+
+        if (userData.avatar && userData.avatar !== avatar.src) {
+          avatar.src = userData.avatar;
+        }
+      }
+    }
+
+    // 页面加载完成后恢复数据
+    window.addEventListener('DOMContentLoaded', loadSavedInfo);
   </script>
 </body>
 
